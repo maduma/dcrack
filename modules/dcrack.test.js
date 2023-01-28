@@ -15,26 +15,26 @@ function checkResult(html, size) {
 
 test('free unit for 1u', () => {
     checkResult(`
-        <div class="free">1</div>
-        <div class="free select" id="target">2</div>
-        <div class="free">3</div>
+        <div class="free"></div>
+        <div class="free select" id="target"></div>
+        <div class="free"></div>
         `, 1);
 });
 
 test('no free unit for 1u', () => {
     checkResult(`
-        <div class="free">1</div>
-        <div id="target">2</div>
-        <div class="free">3</div>
+        <div class="free"></div>
+        <div id="target"></div>
+        <div class="free"></div>
         `, 1);
 });
 
 test('free unit for 2ru', () => {
     checkResult(`
         <div></div>
-        <div class="free">1</div>
-        <div class="free select" id="target">2</div>
-        <div class="free select">3</div>
+        <div class="free"></div>
+        <div class="free select" id="target"></div>
+        <div class="free select"></div>
         <div></div>
         `, 2);
 });
@@ -42,9 +42,9 @@ test('free unit for 2ru', () => {
 test('no free unit for 3u, target not free', () => {
     checkResult(`
         <div></div>
-        <div class="free select">1</div>
-        <div class="free select" id="target">2</div>
-        <div class="free select">3</div>
+        <div class="free select"></div>
+        <div class="free select" id="target"></div>
+        <div class="free select"></div>
         <div></div>
         `, 3);
 });
@@ -52,10 +52,10 @@ test('no free unit for 3u, target not free', () => {
 test('no free unit for 4u, target not free', () => {
     checkResult(`
         <div></div>
-        <div class="free select">1</div>
-        <div class="free select" id="target">2</div>
-        <div class="free select">3</div>
-        <div class="free select">4</div>
+        <div class="free select"></div>
+        <div class="free select" id="target"></div>
+        <div class="free select"></div>
+        <div class="free select"></div>
         <div></div>
         `, 4);
 });
@@ -63,11 +63,11 @@ test('no free unit for 4u, target not free', () => {
 test('no free unit for 5u, target not free', () => {
     checkResult(`
         <div></div>
-        <div class="free select">1</div>
-        <div class="free select">2</div>
-        <div class="free select" id="target">3</div>
-        <div class="free select">4</div>
-        <div class="free select">5</div>
+        <div class="free select"></div>
+        <div class="free select"></div>
+        <div class="free select" id="target"></div>
+        <div class="free select"></div>
+        <div class="free select"></div>
         <div></div>
         `, 5);
 });
@@ -93,20 +93,20 @@ test('no free unit for 12u, target not free', () => {
 
 test('no free unit for 2ru, overflow', () => {
     checkResult(`
-        <div id="target">1</div>
-        `, 3);
+        <div id="target"></div>
+        `, 2);
 });
 
 test('no free unit for 3ru, overflow', () => {
     checkResult(`
-        <div id="target">1</div>
+        <div id="target"></div>
         `, 3);
 });
 
 test('no free unit for 2ru, adjacent', () => {
     checkResult(`
-        <div class="free" id="target">1</div>
-        <div>2</div>
+        <div class="free" id="target"></div>
+        <div></div>
         `, 2);
 });
 

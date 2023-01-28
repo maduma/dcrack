@@ -18,6 +18,10 @@ body {
     margin-top: 1px;
 }
 
+.equipement:hover {
+    background-color: lightgray;
+}
+
 .free-space {
     border: 1px solid lightgray;
     color:gray;
@@ -43,9 +47,14 @@ body {
 }
 
 .blue {
-    color: lightblue;
+    color: blue;
     border-color: lightblue;
 }
+
+.blue:hover {
+    background-color: lightblue;
+}
+
 .server-t52 {
     background-image:url(sun-server-t5-2.gif);
 }
@@ -53,7 +62,7 @@ body {
 .rack-42u {
     width: 244px;
     height: 841px; /* (13 + 3)*42 + 1 */
-    border: 1px solid black;
+    border: 1px solid gray;
     text-align: center;
     vertical-align: middle;
     line-height: 600px;

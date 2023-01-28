@@ -12,7 +12,7 @@ const rack = document.createElement('div');
 function check_selection(size_ru) {
     const target = rack.querySelector('#target');
     const free_rack_units = rack.querySelectorAll('.select');
-    const result = dcrack.free_rack_units_around(target, size_ru)
+    const result = dcrack.free_elements_adjoining(target, size_ru)
     expect(result).toStrictEqual(free_rack_units);
 }
 

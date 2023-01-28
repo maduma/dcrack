@@ -139,5 +139,14 @@ test('no free unit for 3ru, non-adjacent', () => {
 test('target as no parent element', () => {
     const target = document.createElement('div');
     const result = dcrack.getFreeElementsAdjoining(target, 2, 'free');
-    expect(result).toStrictEqual(dcrack.EmptyNodeList);
+    expect(result).toStrictEqual(dcrack.EMPTY_NODELIST);
+});
+
+test('create a rack', () => {
+    const target = document.createElement('div');
+    target.innerHTML = '<tableau size="2" custom-class="rack unit" class="vert"/>';
+    const result = dcrack.createRacks(target, 'tableau');
+    const expected = document.createElement('div');
+    expected.innerHTML = `<div class="rack"><div class="unit vert"></div><div class="unit vert"></div></div>`
+    expect(target).toStrictEqual(expected);
 });

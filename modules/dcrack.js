@@ -1,7 +1,9 @@
 'use strict';
 
 const SELECTED_CLASSNAME = 'private-use-class--this-element-is-selected';
-const EmptyNodeList = document.createElement('div').childNodes;
+const EMPTY_NODELIST = document.createElement('div').childNodes;
+const DEFAULT_RACK_SIZE = 42;
+const DEFAULT_RACK_CLASSES = 'rack-42u equipement free-space size-1u';
 
 /**
  * @param {Element} el
@@ -25,14 +27,48 @@ function selectFreeElements(el, size, direction, freeClassName) {
  * @return {NodeList}
  */
 function getFreeElementsAdjoining(el, size, freeClassName) {
-    if (!el.parentNode) { return EmptyNodeList; }
+    if (!el.parentNode) { return EMPTY_NODELIST; }
     selectFreeElements(el, size, 'previousElementSibling', freeClassName);
     selectFreeElements(el, size, 'nextElementSibling', freeClassName);
     const nodes = el.parentNode.querySelectorAll('.' + SELECTED_CLASSNAME);
-    if (nodes.length != size) { return EmptyNodeList; }
+    if (nodes.length != size) { return EMPTY_NODELIST; }
     nodes.forEach(e => e.classList.remove(SELECTED_CLASSNAME));
     return nodes;
 }
 
+/**
+ * @param {number} size
+ * @param {string} classes
+ */
+function createRack(size, classes) {
+    const rack = document.createElement('div');
+    const classesList = classes.split(' ').map(s => s.trim()).filter(s => s);
+    rack.classList.add(classesList[0]);
+    for (let i = 0; i < size; i++) {
+        const rackUnit = document.createElement('div');
+        rackUnit.classList.add(...classesList.slice(1));
+        rackUnit.innerText = i;
+        rack.appendChild(rackUnit);
+    }
+    return rack;
+}
+
+/**
+ * @param {Element} el
+ * @param {string} tagName
+ * @return {Element}
+ */
+function createRacks(el, tagName) {
+    const racks = el.querySelectorAll(tagName);
+    racks.forEach(rack => {
+        const size = rack.getAttribute('size') || DEFAULT_RACK_SIZE;
+        let classes = rack.getAttribute('custom-class') || DEFAULT_RACK_CLASSES;
+        classes += ' ' + rack.getAttribute('class');
+        const newRack = createRack(size, classes);
+        rack.parentElement.replaceChild(newRack, rack)
+    });
+}
+
 exports.getFreeElementsAdjoining = getFreeElementsAdjoining;
-exports.EmptyNodeList = EmptyNodeList;
+exports.EMPTY_NODELIST = EMPTY_NODELIST;
+exports.createRacks = createRacks;

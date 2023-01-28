@@ -1,0 +1,62 @@
+body {
+    margin: 25px;
+}
+
+.two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.equipement {
+    width: 240px;
+    border: 1px solid black;
+    font-size: smaller;
+    text-align: center;
+    vertical-align: middle;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1px;
+}
+
+.free-space {
+    border: 1px solid lightgray;
+    color:gray;
+}
+
+.dragging {
+    background-color: lightgray;
+}
+
+.size-1u {
+    height: 17px;
+    line-height: 17px;
+}
+
+.size-2u {
+    height: 37px;
+    line-height: 37px;
+}
+
+.size-3u {
+    height: 57px;
+    line-height: 57px;
+}
+
+.blue {
+    color: lightblue;
+    border-color: lightblue;
+}
+.server-t52 {
+    background-image:url(sun-server-t5-2.gif);
+}
+
+.rack-42u {
+    width: 244px;
+    height: 841px; /* (13 + 3)*42 + 1 */
+    border: 1px solid black;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}

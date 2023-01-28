@@ -47,7 +47,7 @@ function createRack(size, classes) {
     for (let i = 0; i < size; i++) {
         const rackUnit = document.createElement('div');
         rackUnit.classList.add(...classesList.slice(1));
-        rackUnit.innerText = i;
+        rackUnit.innerHTML = i + 1;
         rack.appendChild(rackUnit);
     }
     return rack;

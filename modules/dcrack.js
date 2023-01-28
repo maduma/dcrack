@@ -44,10 +44,10 @@ function createRack(size, classes) {
     const rack = document.createElement('div');
     const classesList = classes.split(' ').map(s => s.trim()).filter(s => s);
     rack.classList.add(classesList[0]);
-    for (let i = 0; i < size; i++) {
+    for (let i = size; i > 0; i--) {
         const rackUnit = document.createElement('div');
         rackUnit.classList.add(...classesList.slice(1));
-        rackUnit.innerHTML = i + 1;
+        rackUnit.innerHTML = i;
         rack.appendChild(rackUnit);
     }
     return rack;

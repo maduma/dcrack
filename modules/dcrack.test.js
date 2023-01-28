@@ -147,6 +147,6 @@ test('create a rack', () => {
     target.innerHTML = '<tableau size="2" custom-class="rack unit rouge" class="vert"/>';
     const result = dcrack.createRacks(target, 'tableau');
     const expected = document.createElement('div');
-    expected.innerHTML = `<div class="rack"><div class="unit rouge vert">1</div><div class="unit rouge vert">2</div></div>`
+    expected.innerHTML = `<div class="rack"><div class="unit rouge vert">2</div><div class="unit rouge vert">1</div></div>`
     expect(target).toStrictEqual(expected);
 });

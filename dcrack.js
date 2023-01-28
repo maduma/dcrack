@@ -20,12 +20,12 @@ function select_free_ru(el) {
 function free_rack_units_around(el, size) {
     // previous siblings
     for (let i = 0, e = el.previousElementSibling; i < Math.ceil(size / 2) - 1; i++, e = e.previousElementSibling) {
-        if (e) { break; }
+        if (!e) { break; }
         select_free_ru(e);
     }
     // me and next siblings
     for (let i = 0, e = el; i < Math.floor(size / 2) + 1; i++, e = e.nextElementSibling) {
-        if (e) { break; }
+        if (!e) { break; }
         select_free_ru(e);
     }
     let nodes = el.parentNode.querySelectorAll('.' + SELECTION_CLASSNAME);

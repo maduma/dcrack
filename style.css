@@ -7,7 +7,12 @@ body {
     grid-template-columns: 1fr 1fr;
 }
 
-.equipement {
+.three-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.equipment {
     width: 240px;
     border: 1px solid black;
     font-size: smaller;
@@ -18,7 +23,11 @@ body {
     margin-top: 1px;
 }
 
-.equipement:hover {
+.rack-unit-position {
+    color:gray; 
+} 
+
+.equipment:hover {
     background-color: lightgray;
 }
 

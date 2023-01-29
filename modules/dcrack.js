@@ -3,7 +3,8 @@
 const SELECTED_CLASSNAME = 'private-use-class--this-element-is-selected';
 const EMPTY_NODELIST = document.createElement('div').childNodes;
 const DEFAULT_RACK_SIZE = 42;
-const DEFAULT_RACK_CLASSES = 'rack-42u equipement free-space size-1u';
+const DEFAULT_RACK_CLASS = 'rack-42u';
+const DEFAULT_RACK_UNIT_CLASS = 'equipment free-space size-1u';
 
 /**
  * @param {Element} el
@@ -36,19 +37,87 @@ function getFreeElementsAdjoining(el, size, freeClassName) {
     return nodes;
 }
 
+const stringToClassList = classString => classString.split(' ').map(s => s.trim()).filter(s => s);
+const getSizeFromEvent =  event => event.dataTransfer.types.filter(s => s.startsWith('size-ru/'))[0].split('/')[1]
+
+/**
+ * @param {number} nbr
+ * @param {classList} rackUnitClassList
+ */
+function newRackUnit(rackUnitClassList, nbr) {
+    const rackUnit = document.createElement('div');
+    rackUnit.classList.add(...rackUnitClassList);
+    rackUnit.setAttribute('rack-unit-nbr', nbr);
+    rackUnit.innerHTML = nbr;
+    rackUnit.addEventListener("dragover", event => {
+        event.preventDefault();
+        const size_ru = getSizeFromEvent(event);
+        const elementList = getFreeElementsAdjoining(event.target, size_ru, 'free-space');
+        event.target.parentNode.childNodes.forEach(e => e.classList.remove('dragging'));
+        elementList.forEach(e => e.classList.add('dragging'));
+    });
+    rackUnit.addEventListener("dragleave", event => {
+        event.target.parentNode.childNodes.forEach(e => e.classList.remove('dragging'));
+    });
+    rackUnit.addEventListener("drop", event => {
+        const id = event.dataTransfer.getData('id');
+        const size_ru = getSizeFromEvent(event);
+        const elementList = getFreeElementsAdjoining(event.target, size_ru, 'free-space');
+        const equip = document.getElementById(id);
+        console.log(equip.getAttribute('rack-unit-nbr'));
+        // console.log(equip.previousElementSibling);
+        // console.log(equip.nextElementSibling);
+        const newNbr = elementList.item(0).getAttribute('rack-unit-nbr');
+        equip.setAttribute('rack-unit-nbr', newNbr);
+        event.target.parentNode.replaceChild(equip, elementList.item(0));
+        elementList.forEach(e => e.remove());
+    });
+    return rackUnit;
+}
+
+/**
+ * @param {data} any
+ * @param {number} nbr
+ * @return {Element}
+ */
+function newEquip(data, nbr) {
+    const equipment = document.createElement('div');
+    equipment.classList.add('equipment');
+    equipment.classList.add('size-' + data.size_ru + 'u');
+    equipment.setAttribute('draggable', true);
+    equipment.setAttribute('rack-unit-nbr', nbr);
+    equipment.innerHTML = data.name;
+    equipment.id = data.name;
+    equipment.addEventListener("dragstart", event => {
+        event.dataTransfer.setData("id", equipment.id);
+        event.dataTransfer.setData(`size-ru/${data.size_ru}`, data.size_ru);
+        event.dataTransfer.effectAllowed = 'move';
+    });
+    return equipment;
+}
+
 /**
  * @param {number} size
- * @param {string} classes
+ * @param {string} rackClass
+ * @param {string} rackUnitClass
+ * @param {Array} rackData
+ * @return {Element}
  */
-function createRack(size, classes) {
+function createRack(size, rackClass, rackUnitClass, rackData) {
     const rack = document.createElement('div');
-    const classesList = classes.split(' ').map(s => s.trim()).filter(s => s);
-    rack.classList.add(classesList[0]);
-    for (let i = size; i > 0; i--) {
-        const rackUnit = document.createElement('div');
-        rackUnit.classList.add(...classesList.slice(1));
-        rackUnit.innerHTML = i;
-        rack.appendChild(rackUnit);
+    const rackClassList = stringToClassList(rackClass);
+    const rackUnitClassList = stringToClassList(rackUnitClass);
+    rack.classList.add(...rackClassList);
+    for (let i = 0; i < size; i++) {
+        let element;
+        if (rackData.length && rackData[0].position == i) {
+            const equipmentData = rackData.shift();
+            element = newEquip(equipmentData, i);
+            i += equipmentData.size_ru - 1;
+        } else {
+            element = newRackUnit(rackUnitClassList, i);
+        }
+        rack.appendChild(element);
     }
     return rack;
 }
@@ -56,15 +125,17 @@ function createRack(size, classes) {
 /**
  * @param {Element} el
  * @param {string} tagName
+ * @param {Map<String, any} data
  * @return {Element}
  */
-function createRacks(el, tagName) {
+function createRacks(el, tagName, data) {
     const racks = el.querySelectorAll(tagName);
     racks.forEach(rack => {
         const size = rack.getAttribute('size') || DEFAULT_RACK_SIZE;
-        let classes = rack.getAttribute('custom-class') || DEFAULT_RACK_CLASSES;
-        classes += ' ' + rack.getAttribute('class');
-        const newRack = createRack(size, classes);
+        const rackClass = rack.getAttribute('rack-class') || DEFAULT_RACK_CLASS;
+        const rackUnitClass = rack.getAttribute('rack-unit-class') || DEFAULT_RACK_UNIT_CLASS;
+        const rackData = data[rack.getAttribute('rack-data')] || []
+        const newRack = createRack(size, rackClass, rackUnitClass, rackData);
         rack.parentElement.replaceChild(newRack, rack)
     });
 }

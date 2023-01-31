@@ -38,7 +38,7 @@ function getFreeElementsAdjoining(el, size, freeClassName) {
 }
 
 const stringToClassList = classString => classString.split(' ').map(s => s.trim()).filter(s => s);
-const getSizeFromEvent =  event => event.dataTransfer.types.filter(s => s.startsWith('size-ru/'))[0].split('/')[1]
+const getSizeFromEvent =  event => parseInt(event.dataTransfer.types.filter(s => s.startsWith('size-ru/'))[0].split('/')[1]);
 
 /**
  * @param {number} nbr
@@ -64,9 +64,13 @@ function newRackUnit(rackUnitClassList, nbr) {
         const size_ru = getSizeFromEvent(event);
         const elementList = getFreeElementsAdjoining(event.target, size_ru, 'free-space');
         const equip = document.getElementById(id);
-        console.log(equip.getAttribute('rack-unit-nbr'));
-        // console.log(equip.previousElementSibling);
-        // console.log(equip.nextElementSibling);
+        const oldRackNbr = parseInt(equip.getAttribute('rack-unit-nbr'));
+        const oldParent = equip.parentElement;
+        for (let i = oldRackNbr; i < oldRackNbr + size_ru; i++) {
+            const element = newRackUnit(rackUnitClassList, i);
+            oldParent.insertBefore(element, equip);
+        }
+
         const newNbr = elementList.item(0).getAttribute('rack-unit-nbr');
         equip.setAttribute('rack-unit-nbr', newNbr);
         event.target.parentNode.replaceChild(equip, elementList.item(0));

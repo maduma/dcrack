@@ -145,8 +145,8 @@ test('target as no parent element', () => {
 test('create a rack', () => {
     const target = document.createElement('div');
     target.innerHTML = '<tableau size="2" rack-class="tableau rouge" rack-unit-class=" tiroir  bleu "/>';
-    const result = dcrack.createRacks(target, 'tableau');
+    const result = dcrack.createRacks(target, 'tableau', {});
     const expected = document.createElement('div');
-    expected.innerHTML = `<div class="tableau rouge"><div class="tiroir bleu">2</div><div class="tiroir bleu">1</div></div>`
+    expected.innerHTML = `<div class="tableau rouge"><div class="tiroir bleu" rack-unit-nbr="0">0</div><div class="tiroir bleu" rack-unit-nbr="1">1</div></div>`
     expect(target).toStrictEqual(expected);
 });

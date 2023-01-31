@@ -96,7 +96,7 @@ function newEquip(data, nbr) {
     if (data.image) {
         equipment.setAttribute('style', `background-image: url("images/${data.image}");`);
     }
-    equipment.innerHTML = `<span>${data.name}</span>`;
+    equipment.innerHTML = `<span title="size: ${data.size_ru}U">${data.name}</span>`;
     equipment.id = data.name;
     equipment.addEventListener("dragstart", event => {
         event.dataTransfer.setData("id", equipment.id);

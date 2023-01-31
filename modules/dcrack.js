@@ -114,6 +114,7 @@ function newEquip(data, nbr) {
  * @return {Element}
  */
 function createRack(size, rackClass, rackUnitClass, rackData) {
+    rackData.sort((a, b) => parseInt(a.position) - parseInt(b.position));
     const rack = document.createElement('div');
     const rackClassList = stringToClassList(rackClass);
     const rackUnitClassList = stringToClassList(rackUnitClass);

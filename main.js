@@ -13,9 +13,20 @@ const rackData = [
     {"name": "v5200-2", "size_ru": 1, "position": 24, "image": "v5200.gif"},
 ]
 
-rackData.sort((a, b) => a.position < b.position);
+/**
+ * @param {Array} data
+ */
+function justStack(data) {
+    let start = 0;
+    data.forEach(d => {
+        d.position = start
+        start += d.size_ru;
+    });
+}
+
+rackData.sort((a, b) => a.name.localeCompare(b.name));
+justStack(rackData);
 
 dcrack.createRacks(document, 'rack', {"rackData": rackData});
 
 //validate data with rack size
-//insert equipement in rack

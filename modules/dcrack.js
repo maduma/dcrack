@@ -12,8 +12,8 @@ const DEFAULT_RACK_UNIT_CLASS = 'equipment free-space size-1u';
  * @param {string} direction
  */
 function selectFreeElements(el, size, direction, freeClassName) {
-    const start = direction == 'previousElementSibling' ?  el.previousElementSibling : el;
-    const limit = direction == 'previousElementSibling' ? Math.ceil(size / 2) - 1 : Math.floor(size / 2) + 1;
+    const start = direction == 'previousElementSibling' ?  el : el.nextElementSibling;
+    const limit = direction == 'previousElementSibling' ? Math.floor(size / 2) + 1 : Math.ceil(size / 2) - 1;
     for (let i = 0, e = start; i < limit; i++, e = e[direction]) {
         if (!e) { break; }
         if (e.classList.contains(freeClassName)) {
@@ -32,8 +32,8 @@ function getFreeElementsAdjoining(el, size, freeClassName) {
     selectFreeElements(el, size, 'previousElementSibling', freeClassName);
     selectFreeElements(el, size, 'nextElementSibling', freeClassName);
     const nodes = el.parentNode.querySelectorAll('.' + SELECTED_CLASSNAME);
+    nodes.forEach(e => e.classList.remove(SELECTED_CLASSNAME)); 
     if (nodes.length != size) { return EMPTY_NODELIST; }
-    nodes.forEach(e => e.classList.remove(SELECTED_CLASSNAME));
     return nodes;
 }
 
@@ -50,9 +50,10 @@ function newRackUnit(rackUnitClassList, nbr) {
     rackUnit.setAttribute('rack-unit-nbr', nbr);
     rackUnit.innerHTML = nbr;
     rackUnit.addEventListener("dragover", event => {
-        event.preventDefault();
         const size_ru = getSizeFromEvent(event);
         const elementList = getFreeElementsAdjoining(event.target, size_ru, 'free-space');
+        if (!elementList.length) { return; }
+        event.preventDefault();
         event.target.parentNode.childNodes.forEach(e => e.classList.remove('dragging'));
         elementList.forEach(e => e.classList.add('dragging'));
     });
@@ -60,6 +61,7 @@ function newRackUnit(rackUnitClassList, nbr) {
         event.target.parentNode.childNodes.forEach(e => e.classList.remove('dragging'));
     });
     rackUnit.addEventListener("drop", event => {
+        event.preventDefault();
         const id = event.dataTransfer.getData('id');
         const size_ru = getSizeFromEvent(event);
         const elementList = getFreeElementsAdjoining(event.target, size_ru, 'free-space');
@@ -91,7 +93,10 @@ function newEquip(data, nbr) {
     equipment.setAttribute('draggable', true);
     equipment.setAttribute('rack-unit-nbr', nbr);
     equipment.setAttribute('size-ru', data.size_ru);
-    equipment.innerHTML = data.name;
+    if (data.image) {
+        equipment.setAttribute('style', `background-image: url("images/${data.image}");`);
+    }
+    equipment.innerHTML = `<span>${data.name}</span>`;
     equipment.id = data.name;
     equipment.addEventListener("dragstart", event => {
         event.dataTransfer.setData("id", equipment.id);

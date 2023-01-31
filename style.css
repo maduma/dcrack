@@ -23,16 +23,19 @@ body {
     margin-top: 1px;
 }
 
+.equipment span {
+    background-color: white;
+    padding: 0px 5px 0px 5px;
+    border-radius: 3px;
+    font-size: smaller;
+}
+
 .rack-unit-position {
     color:gray; 
 } 
 
-.equipment:hover {
-    background-color: lightgray;
-}
-
 .free-space {
-    border: 1px solid lightgray;
+    border: 1px solid white;
     color:gray;
 }
 
@@ -77,4 +80,8 @@ body {
     line-height: 600px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.rack-title {
+    text-align: center;
 }

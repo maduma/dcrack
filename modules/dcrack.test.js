@@ -32,9 +32,9 @@ test('no free unit for 1u', () => {
 test('free unit for 2ru', () => {
     checkResult(`
         <div></div>
-        <div class="free"></div>
-        <div class="free select" id="target"></div>
         <div class="free select"></div>
+        <div class="free select" id="target"></div>
+        <div class="free"></div>
         <div></div>
         `, 2);
 });
@@ -53,8 +53,8 @@ test('no free unit for 4u, target not free', () => {
     checkResult(`
         <div></div>
         <div class="free select"></div>
-        <div class="free select" id="target"></div>
         <div class="free select"></div>
+        <div class="free select" id="target"></div>
         <div class="free select"></div>
         <div></div>
         `, 4);
@@ -80,8 +80,8 @@ test('no free unit for 12u, target not free', () => {
         <div class="free select"></div>
         <div class="free select"></div>
         <div class="free select"></div>
-        <div class="free select" id="target"></div>
         <div class="free select"></div>
+        <div class="free select" id="target"></div>
         <div class="free select"></div>
         <div class="free select"></div>
         <div class="free select"></div>

@@ -90,6 +90,7 @@ function newEquip(data, nbr) {
     equipment.classList.add('size-' + data.size_ru + 'u');
     equipment.setAttribute('draggable', true);
     equipment.setAttribute('rack-unit-nbr', nbr);
+    equipment.setAttribute('size-ru', data.size_ru);
     equipment.innerHTML = data.name;
     equipment.id = data.name;
     equipment.addEventListener("dragstart", event => {

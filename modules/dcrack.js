@@ -72,7 +72,6 @@ function newRackUnit(rackUnitClassList, nbr) {
             const element = newRackUnit(rackUnitClassList, i);
             oldParent.insertBefore(element, equip);
         }
-
         const newNbr = elementList.item(0).getAttribute('rack-unit-nbr');
         equip.setAttribute('rack-unit-nbr', newNbr);
         event.target.parentNode.replaceChild(equip, elementList.item(0));
@@ -96,7 +95,7 @@ function newEquip(data, nbr) {
     if (data.image) {
         equipment.setAttribute('style', `background-image: url("images/${data.image}");`);
     }
-    equipment.innerHTML = `<span title="size: ${data.size_ru}U">${data.name}</span>`;
+    equipment.innerHTML = `<span title="${data.size_ru}U">${data.name}</span>`;
     equipment.id = data.name;
     equipment.addEventListener("dragstart", event => {
         event.dataTransfer.setData("id", equipment.id);

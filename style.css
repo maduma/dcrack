@@ -14,13 +14,13 @@ body {
 
 .equipment {
     width: 240px;
-    border: 1px solid black;
+    border: 1px solid lightgray;
     font-size: smaller;
     text-align: center;
     vertical-align: middle;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 1px;
+    margin-top: 2px;
 }
 
 .equipment span {
@@ -35,7 +35,7 @@ body {
 } 
 
 .free-space {
-    border: 1px solid white;
+    border: 1px solid lightgray;
     color:gray;
 }
 
@@ -49,12 +49,12 @@ body {
 }
 
 .size-2u {
-    height: 37px;
+    height: 38px;
     line-height: 37px;
 }
 
 .size-3u {
-    height: 57px;
+    height: 59px;
     line-height: 57px;
 }
 
@@ -73,7 +73,7 @@ body {
 
 .rack-42u {
     width: 244px;
-    height: 841px; /* (13 + 3)*42 + 1 */
+    height: 883px; /* (17 + 3)*42 + 1 */
     border: 1px solid gray;
     text-align: center;
     vertical-align: middle;

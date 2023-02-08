@@ -2,8 +2,8 @@
 
 const SELECTED_CLASSNAME = 'private-use-class--this-element-is-selected';
 const EMPTY_NODELIST = document.createElement('div').childNodes;
-const DEFAULT_RACK_SIZE = 42;
-const DEFAULT_RACK_CLASS = 'rack-42u';
+const DEFAULT_RACK_SIZE = 32;
+const DEFAULT_RACK_CLASS = 'rack-32u';
 const DEFAULT_RACK_UNIT_CLASS = 'equipment free-space size-1u';
 
 /**
@@ -48,7 +48,7 @@ function newRackUnit(rackUnitClassList, nbr) {
     const rackUnit = document.createElement('div');
     rackUnit.classList.add(...rackUnitClassList);
     rackUnit.setAttribute('rack-unit-nbr', nbr);
-    rackUnit.innerHTML = nbr;
+    rackUnit.innerHTML = DEFAULT_RACK_SIZE - nbr;
     rackUnit.addEventListener("dragover", event => {
         const size_ru = getSizeFromEvent(event);
         const elementList = getFreeElementsAdjoining(event.target, size_ru, 'free-space');
@@ -85,7 +85,7 @@ function newRackUnit(rackUnitClassList, nbr) {
  * @param {number} nbr
  * @return {Element}
  */
-function newEquip(data, nbr) {
+function newEquip(rackId, data, nbr) {
     const equipment = document.createElement('div');
     equipment.classList.add('equipment');
     equipment.classList.add('size-' + data.size_ru + 'u');
@@ -96,7 +96,7 @@ function newEquip(data, nbr) {
         equipment.setAttribute('style', `background-image: url("images/${data.image}");`);
     }
     equipment.innerHTML = `<span title="${data.size_ru}U">${data.name}</span>`;
-    equipment.id = data.name;
+    equipment.id = `rack-${rackId}-${data.name}`;
     equipment.addEventListener("dragstart", event => {
         event.dataTransfer.setData("id", equipment.id);
         event.dataTransfer.setData(`size-ru/${data.size_ru}`, data.size_ru);
@@ -112,17 +112,18 @@ function newEquip(data, nbr) {
  * @param {Array} rackData
  * @return {Element}
  */
-function createRack(size, rackClass, rackUnitClass, rackData) {
-    rackData.sort((a, b) => parseInt(a.position) - parseInt(b.position));
+function createRack(rackId, size, rackClass, rackUnitClass, data) {
+    data.sort((a, b) => parseInt(a.position) - parseInt(b.position));
     const rack = document.createElement('div');
+    rack.id = `rack-${rackId}`;
     const rackClassList = stringToClassList(rackClass);
     const rackUnitClassList = stringToClassList(rackUnitClass);
     rack.classList.add(...rackClassList);
     for (let i = 0; i < size; i++) {
         let element;
-        if (rackData.length && rackData[0].position == i) {
-            const equipmentData = rackData.shift();
-            element = newEquip(equipmentData, i);
+        if (data.length && data[0].position == i) {
+            const equipmentData = data.shift();
+            element = newEquip(rackId, equipmentData, i);
             i += equipmentData.size_ru - 1;
         } else {
             element = newRackUnit(rackUnitClassList, i);
@@ -138,14 +139,26 @@ function createRack(size, rackClass, rackUnitClass, rackData) {
  * @param {Map<String, any} data
  * @return {Element}
  */
-function createRacks(el, tagName, data) {
+function createRacks(el, tagName, asyncData) {
     const racks = el.querySelectorAll(tagName);
     racks.forEach(rack => {
-        const size = rack.getAttribute('size') || DEFAULT_RACK_SIZE;
-        const rackClass = rack.getAttribute('rack-class') || DEFAULT_RACK_CLASS;
-        const rackUnitClass = rack.getAttribute('rack-unit-class') || DEFAULT_RACK_UNIT_CLASS;
-        const rackData = data[rack.getAttribute('rack-data')] || []
-        const newRack = createRack(size, rackClass, rackUnitClass, rackData);
+        const rackId = rack.getAttribute('rack-id') || -1;
+        asyncData(rackId).then(data => {
+            const newRack = createRack(rackId, DEFAULT_RACK_SIZE, DEFAULT_RACK_CLASS, DEFAULT_RACK_UNIT_CLASS, data);
+            rack.parentElement.replaceChild(newRack, rack)
+        });
+    });
+}
+
+
+/**
+ * @param {Element} el
+ * @param {Number} rackId
+ */
+function updateRack(el, rackId, asyncData) {
+    const rack = el.getElementById(`rack-${rackId}`);
+    asyncData(rackId).then(data => {
+        const newRack = createRack(rackId, DEFAULT_RACK_SIZE, DEFAULT_RACK_CLASS, DEFAULT_RACK_UNIT_CLASS, data);
         rack.parentElement.replaceChild(newRack, rack)
     });
 }
@@ -153,3 +166,4 @@ function createRacks(el, tagName, data) {
 exports.getFreeElementsAdjoining = getFreeElementsAdjoining;
 exports.EMPTY_NODELIST = EMPTY_NODELIST;
 exports.createRacks = createRacks;
+exports.updateRack = updateRack;

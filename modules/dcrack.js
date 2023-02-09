@@ -6,6 +6,12 @@ const DEFAULT_RACK_SIZE = 32;
 const DEFAULT_RACK_CLASS = 'rack-32u';
 const DEFAULT_RACK_UNIT_CLASS = 'equipment free-space size-1u';
 
+function createUuid() {
+    const now = Date.now();
+    const randomNumber = Math.random() * 10 ** 6; 
+    return `${now}-${randomNumber.toString(16)}`;
+}
+
 /**
  * @param {Element} el
  * @param {number} size
@@ -90,13 +96,14 @@ function newEquip(rackId, data, nbr) {
     equipment.classList.add('equipment');
     equipment.classList.add('size-' + data.size_ru + 'u');
     equipment.setAttribute('draggable', true);
+    equipment.setAttribute('equipment-id', data.id);
     equipment.setAttribute('rack-unit-nbr', nbr);
     equipment.setAttribute('size-ru', data.size_ru);
     if (data.image) {
         equipment.setAttribute('style', `background-image: url("images/${data.image}");`);
     }
     equipment.innerHTML = `<span title="${data.size_ru}U">${data.name}</span>`;
-    equipment.id = `rack-${rackId}-${data.name}`;
+    equipment.id = `equipment-${createUuid()}`;
     equipment.addEventListener("dragstart", event => {
         event.dataTransfer.setData("id", equipment.id);
         event.dataTransfer.setData(`size-ru/${data.size_ru}`, data.size_ru);

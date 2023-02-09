@@ -12,7 +12,8 @@ function justStack(data) {
 }
 
 async function asyncDataHttp(rackId) {
-    const response = await fetch('data.json');
+    const response = await fetch(`http://127.0.0.1:8000/inventory/rack/${rackId}/json/`);
+    // const response = await fetch('data.json');
     const data = await response.json();
     data.sort((a, b) => a.name.localeCompare(b.name));
     justStack(data)
@@ -27,7 +28,7 @@ dcrack.createRacks(document, 'rack', asyncDataHttp);
 
 const buttons = document.querySelectorAll('button');
 buttons.forEach(button => {
-    const rackId = parseInt(button.getAttribute('rack-id'));
+    const rackId = button.getAttribute('rack-id');
     button.addEventListener('click', ev => {
         dcrack.updateRack(document, rackId, asyncDataHttp);
     })

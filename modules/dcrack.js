@@ -50,7 +50,7 @@ const getSizeFromEvent =  event => parseInt(event.dataTransfer.types.filter(s =>
  * @param {number} nbr
  * @param {classList} rackUnitClassList
  */
-function newRackUnit(rackUnitClassList, nbr) {
+function newRackUnit(rackUnitClassList, nbr, eventListenersSelector) {
     const rackUnit = document.createElement('div');
     rackUnit.classList.add(...rackUnitClassList);
     rackUnit.setAttribute('rack-unit-nbr', nbr);
@@ -75,13 +75,21 @@ function newRackUnit(rackUnitClassList, nbr) {
         const oldRackNbr = parseInt(equip.getAttribute('rack-unit-nbr'));
         const oldParent = equip.parentElement;
         for (let i = oldRackNbr; i < oldRackNbr + size_ru; i++) {
-            const element = newRackUnit(rackUnitClassList, i);
+            const element = newRackUnit(rackUnitClassList, i, eventListenersSelector);
             oldParent.insertBefore(element, equip);
         }
         const newNbr = elementList.item(0).getAttribute('rack-unit-nbr');
         equip.setAttribute('rack-unit-nbr', newNbr);
+        const oldRackId = oldParent.id
+        const newRackId = event.target.parentNode.id
         event.target.parentNode.replaceChild(equip, elementList.item(0));
         elementList.forEach(e => e.remove());
+        const changedEvent1 = new Event(`${oldRackId}-changed`);
+        const changedEvent2 = new Event(`${newRackId}-changed`);
+        document.querySelectorAll(eventListenersSelector).forEach(e => {
+            e.dispatchEvent(changedEvent1);
+            e.dispatchEvent(changedEvent2);
+        });
     });
     return rackUnit;
 }
@@ -119,7 +127,7 @@ function newEquip(rackId, data, nbr) {
  * @param {Array} rackData
  * @return {Element}
  */
-function createRack(rackId, size, rackClass, rackUnitClass, data) {
+function createRack(rackId, size, rackClass, rackUnitClass, data, eventListenersSelector) {
     data.sort((a, b) => parseInt(a.position) - parseInt(b.position));
     const rack = document.createElement('div');
     rack.id = `rack-${rackId}`;
@@ -133,7 +141,7 @@ function createRack(rackId, size, rackClass, rackUnitClass, data) {
             element = newEquip(rackId, equipmentData, i);
             i += equipmentData.size_ru - 1;
         } else {
-            element = newRackUnit(rackUnitClassList, i);
+            element = newRackUnit(rackUnitClassList, i, eventListenersSelector);
         }
         rack.appendChild(element);
     }
@@ -146,12 +154,12 @@ function createRack(rackId, size, rackClass, rackUnitClass, data) {
  * @param {Map<String, any} data
  * @return {Element}
  */
-function createRacks(el, tagName, asyncData) {
+function createRacks(el, tagName, asyncData, eventListenersSelector) {
     const racks = el.querySelectorAll(tagName);
     racks.forEach(rack => {
         const rackId = rack.getAttribute('rack-id') || -1;
         asyncData(rackId).then(data => {
-            const newRack = createRack(rackId, DEFAULT_RACK_SIZE, DEFAULT_RACK_CLASS, DEFAULT_RACK_UNIT_CLASS, data);
+            const newRack = createRack(rackId, DEFAULT_RACK_SIZE, DEFAULT_RACK_CLASS, DEFAULT_RACK_UNIT_CLASS, data, eventListenersSelector);
             rack.parentElement.replaceChild(newRack, rack)
         });
     });
@@ -162,15 +170,15 @@ function createRacks(el, tagName, asyncData) {
  * @param {Element} el
  * @param {Number} rackId
  */
-function loadRack(el, rackId, asyncData) {
+function loadRack(el, rackId, asyncData, eventListenersSelector) {
     const rack = el.getElementById(`rack-${rackId}`);
     asyncData(rackId).then(data => {
-        const newRack = createRack(rackId, DEFAULT_RACK_SIZE, DEFAULT_RACK_CLASS, DEFAULT_RACK_UNIT_CLASS, data);
+        const newRack = createRack(rackId, DEFAULT_RACK_SIZE, DEFAULT_RACK_CLASS, DEFAULT_RACK_UNIT_CLASS, data, eventListenersSelector);
         rack.parentElement.replaceChild(newRack, rack)
     });
 }
 
-function saveRack(el, rackId, asyncPostData) {
+function saveRack(el, rackId, asyncPostData, eventListenersSelector) {
     const rack = el.getElementById(`rack-${rackId}`);
     const equipments = rack.querySelectorAll("[equipment-id]");
     const rackData = [];

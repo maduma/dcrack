@@ -10,6 +10,10 @@ async function noData(rackId) {
     return []
 }
 
+async function noPostData(rackId, data) {
+    return []
+}
+
 async function asyncGetRemoteDataHttp(rackId) {
     // const response = await fetch(`https://itops.int.hs.lu/inventory/rack/${rackId}/json/`);
     const response = await fetch(`http://127.0.0.1:8000/inventory/rack/${rackId}/json/`);
@@ -25,20 +29,30 @@ async function asyncPostRemoteDataHttp(rackId, data) {
     return data;
 }
 
-dcrack.createRacks(document, 'rack', asyncGetRemoteDataHttp);
+const eventListenersSelector = 'button';
 
 const loadButtons = document.querySelectorAll('button.load');
 loadButtons.forEach(button => {
     const rackId = button.getAttribute('rack-id');
     button.addEventListener('click', ev => {
-        dcrack.loadRack(document, rackId, asyncGetRemoteDataHttp);
-    })
+        dcrack.loadRack(document, rackId, asyncLocalDataHttp, eventListenersSelector);
+        button.parentNode.querySelectorAll('button').forEach(b => b.disabled = true);
+    });
+    button.addEventListener(`rack-${rackId}-changed`, ev => {
+        ev.target.disabled = false;
+    });
 })
 
 const saveButtons = document.querySelectorAll('button.save');
 saveButtons.forEach(button => {
     const rackId = button.getAttribute('rack-id');
     button.addEventListener('click', ev => {
-        dcrack.saveRack(document, rackId, asyncPostRemoteDataHttp);
-    })
+        dcrack.saveRack(document, rackId, noPostData, eventListenersSelector);
+        button.parentNode.querySelectorAll('button').forEach(b => b.disabled = true);
+    });
+    button.addEventListener(`rack-${rackId}-changed`, ev => {
+        ev.target.disabled = false;
+    });
 })
+
+dcrack.createRacks(document, 'rack', asyncLocalDataHttp, eventListenersSelector);

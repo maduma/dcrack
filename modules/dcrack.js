@@ -170,7 +170,7 @@ function loadRack(el, rackId, asyncData) {
     });
 }
 
-function saveRack(el, rackId, asyncData) {
+function saveRack(el, rackId, asyncPostData) {
     const rack = el.getElementById(`rack-${rackId}`);
     const equipments = rack.querySelectorAll("[equipment-id]");
     const rackData = [];
@@ -181,7 +181,7 @@ function saveRack(el, rackId, asyncData) {
         };
         rackData.push(data);
     });
-    console.log(rackData);
+    asyncPostData(rackId, rackData);
 }
 
 exports.getFreeElementsAdjoining = getFreeElementsAdjoining;

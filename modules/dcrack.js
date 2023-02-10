@@ -2,8 +2,8 @@
 
 const SELECTED_CLASSNAME = 'private-use-class--this-element-is-selected';
 const EMPTY_NODELIST = document.createElement('div').childNodes;
-const DEFAULT_RACK_SIZE = 32;
-const DEFAULT_RACK_CLASS = 'rack-32u';
+const DEFAULT_RACK_SIZE = 42;
+const DEFAULT_RACK_CLASS = 'rack-42u';
 const DEFAULT_RACK_UNIT_CLASS = 'equipment free-space size-1u';
 
 function createUuid() {
@@ -100,7 +100,7 @@ function newEquip(rackId, data, nbr) {
     equipment.setAttribute('rack-unit-nbr', nbr);
     equipment.setAttribute('size-ru', data.size_ru);
     if (data.image) {
-        equipment.setAttribute('style', `background-image: url("images/${data.image}");`);
+        equipment.setAttribute('style', `background-image: url("${data.image}");`);
     }
     equipment.innerHTML = `<span title="${data.size_ru}U">${data.name}</span>`;
     equipment.id = `equipment-${createUuid()}`;

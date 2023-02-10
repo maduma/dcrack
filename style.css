@@ -86,10 +86,7 @@ body {
     text-align: center;
 }
 
-button {
-    display: block;
+.buttons {
+    margin-top: 10px;
     text-align: center;
-    margin-top: 5px;
-    margin-left: auto;
-    margin-right: auto;
 }

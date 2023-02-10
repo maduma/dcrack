@@ -54,7 +54,7 @@ function newRackUnit(rackUnitClassList, nbr) {
     const rackUnit = document.createElement('div');
     rackUnit.classList.add(...rackUnitClassList);
     rackUnit.setAttribute('rack-unit-nbr', nbr);
-    rackUnit.innerHTML = DEFAULT_RACK_SIZE - nbr;
+    rackUnit.innerHTML = nbr;
     rackUnit.addEventListener("dragover", event => {
         const size_ru = getSizeFromEvent(event);
         const elementList = getFreeElementsAdjoining(event.target, size_ru, 'free-space');
@@ -162,7 +162,7 @@ function createRacks(el, tagName, asyncData) {
  * @param {Element} el
  * @param {Number} rackId
  */
-function updateRack(el, rackId, asyncData) {
+function loadRack(el, rackId, asyncData) {
     const rack = el.getElementById(`rack-${rackId}`);
     asyncData(rackId).then(data => {
         const newRack = createRack(rackId, DEFAULT_RACK_SIZE, DEFAULT_RACK_CLASS, DEFAULT_RACK_UNIT_CLASS, data);
@@ -170,7 +170,22 @@ function updateRack(el, rackId, asyncData) {
     });
 }
 
+function saveRack(el, rackId, asyncData) {
+    const rack = el.getElementById(`rack-${rackId}`);
+    const equipments = rack.querySelectorAll("[equipment-id]");
+    const rackData = [];
+    equipments.forEach( e => {
+        const data = {
+            "id": e.getAttribute('equipment-id'),
+            "position": e.getAttribute('rack-unit-nbr'),
+        };
+        rackData.push(data);
+    });
+    console.log(rackData);
+}
+
 exports.getFreeElementsAdjoining = getFreeElementsAdjoining;
 exports.EMPTY_NODELIST = EMPTY_NODELIST;
 exports.createRacks = createRacks;
-exports.updateRack = updateRack;
+exports.loadRack = loadRack;
+exports.saveRack = saveRack;

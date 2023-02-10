@@ -22,6 +22,14 @@ const loadButtons = document.querySelectorAll('button.load');
 loadButtons.forEach(button => {
     const rackId = button.getAttribute('rack-id');
     button.addEventListener('click', ev => {
-        dcrack.updateRack(document, rackId, asyncLocalDataHttp);
+        dcrack.loadRack(document, rackId, asyncLocalDataHttp);
+    })
+})
+
+const saveButtons = document.querySelectorAll('button.save');
+saveButtons.forEach(button => {
+    const rackId = button.getAttribute('rack-id');
+    button.addEventListener('click', ev => {
+        dcrack.saveRack(document, rackId, asyncLocalDataHttp);
     })
 })

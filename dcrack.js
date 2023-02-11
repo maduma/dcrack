@@ -5,10 +5,12 @@ const config = {
     DEFAULT_RACK_CLASS: 'rack-42u',
     DEFAULT_RACK_UNIT_CLASS: 'equipment free-space size-1u',
     DEFAULT_FREE_CLASS: 'free-space',
+    DRAGGING_CLASSNAME: 'dragging',
     event_dispatch_selector: null,
     asyncGetData: async rackId => [],
     asyncPostData: async (rackId, data) => [],
 }
+
 const SELECTED_CLASSNAME = 'private-use-class--this-element-is-selected';
 const EMPTY_NODELIST = document.createElement('div').childNodes;
 
@@ -42,52 +44,52 @@ function getFreeElementsAdjoining(el, size) {
     return nodes;
 }
 
+function dragoverHandler(event) {
+    const size_ru = getSizeFromEvent(event);
+    const elementList = getFreeElementsAdjoining(event.target, size_ru);
+    if (!elementList.length) { return; }
+    event.preventDefault();
+    event.target.parentNode.childNodes.forEach(e => e.classList.remove(config.DRAGGING_CLASSNAME));
+    elementList.forEach(e => e.classList.add(config.DRAGGING_CLASSNAME));
+}
+
+function dropHandler(event) {
+    event.preventDefault();
+    const id = event.dataTransfer.getData('id');
+    const size_ru = getSizeFromEvent(event);
+    const elementList = getFreeElementsAdjoining(event.target, size_ru);
+    const equip = document.getElementById(id);
+    const oldRackNbr = parseInt(equip.getAttribute('rack-unit-nbr'));
+    const oldParent = equip.parentElement;
+    for (let i = oldRackNbr; i < oldRackNbr + size_ru; i++) {
+        const element = newRackUnit(i);
+        oldParent.insertBefore(element, equip);
+    }
+    const newNbr = elementList.item(0).getAttribute('rack-unit-nbr');
+    equip.setAttribute('rack-unit-nbr', newNbr);
+    const oldRackId = oldParent.id
+    const newRackId = event.target.parentNode.id
+    event.target.parentNode.replaceChild(equip, elementList.item(0));
+    elementList.forEach(e => e.remove());
+    const changedEvent1 = new Event(`${oldRackId}-changed`);
+    const changedEvent2 = new Event(`${newRackId}-changed`);
+    document.querySelectorAll(config.event_dispatch_selector).forEach(e => {
+        e.dispatchEvent(changedEvent1);
+        e.dispatchEvent(changedEvent2);
+    });
+}
+
 function newRackUnit(position) {
     const rackUnit = document.createElement('div');
     const rackUnitClassList = stringToClassList(config.DEFAULT_RACK_UNIT_CLASS)
     rackUnit.classList.add(...rackUnitClassList);
     rackUnit.setAttribute('rack-unit-nbr', position);
     rackUnit.innerHTML = position;
-    
-    rackUnit.addEventListener("dragover", event => {
-        const size_ru = getSizeFromEvent(event);
-        const elementList = getFreeElementsAdjoining(event.target, size_ru);
-        if (!elementList.length) { return; }
-        event.preventDefault();
-        event.target.parentNode.childNodes.forEach(e => e.classList.remove('dragging'));
-        elementList.forEach(e => e.classList.add('dragging'));
-    });
-    
+    rackUnit.addEventListener("dragover", dragoverHandler);
+    rackUnit.addEventListener("drop", dropHandler);
     rackUnit.addEventListener("dragleave", event => {
-        event.target.parentNode.childNodes.forEach(e => e.classList.remove('dragging'));
+        event.target.parentNode.childNodes.forEach(e => e.classList.remove(config.DRAGGING_CLASSNAME));
     });
-    
-    rackUnit.addEventListener("drop", event => {
-        event.preventDefault();
-        const id = event.dataTransfer.getData('id');
-        const size_ru = getSizeFromEvent(event);
-        const elementList = getFreeElementsAdjoining(event.target, size_ru);
-        const equip = document.getElementById(id);
-        const oldRackNbr = parseInt(equip.getAttribute('rack-unit-nbr'));
-        const oldParent = equip.parentElement;
-        for (let i = oldRackNbr; i < oldRackNbr + size_ru; i++) {
-            const element = newRackUnit(i);
-            oldParent.insertBefore(element, equip);
-        }
-        const newNbr = elementList.item(0).getAttribute('rack-unit-nbr');
-        equip.setAttribute('rack-unit-nbr', newNbr);
-        const oldRackId = oldParent.id
-        const newRackId = event.target.parentNode.id
-        event.target.parentNode.replaceChild(equip, elementList.item(0));
-        elementList.forEach(e => e.remove());
-        const changedEvent1 = new Event(`${oldRackId}-changed`);
-        const changedEvent2 = new Event(`${newRackId}-changed`);
-        document.querySelectorAll(config.event_dispatch_selector).forEach(e => {
-            e.dispatchEvent(changedEvent1);
-            e.dispatchEvent(changedEvent2);
-        });
-    });
-    
     return rackUnit;
 }
 

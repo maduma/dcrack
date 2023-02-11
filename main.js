@@ -29,13 +29,11 @@ async function asyncPostRemoteDataHttp(rackId, data) {
     return data;
 }
 
-const eventListenersSelector = 'button';
-
 const loadButtons = document.querySelectorAll('button.load');
 loadButtons.forEach(button => {
     const rackId = button.getAttribute('rack-id');
     button.addEventListener('click', ev => {
-        dcrack.loadRack(document, rackId, asyncGetRemoteDataHttp, eventListenersSelector);
+        dcrack.loadRack(rackId);
         button.parentNode.querySelectorAll('button').forEach(b => b.disabled = true);
     });
     button.addEventListener(`rack-${rackId}-changed`, ev => {
@@ -47,7 +45,7 @@ const saveButtons = document.querySelectorAll('button.save');
 saveButtons.forEach(button => {
     const rackId = button.getAttribute('rack-id');
     button.addEventListener('click', ev => {
-        dcrack.saveRack(document, rackId, asyncPostRemoteDataHttp, eventListenersSelector);
+        dcrack.saveRack(rackId);
         button.parentNode.querySelectorAll('button').forEach(b => b.disabled = true);
     });
     button.addEventListener(`rack-${rackId}-changed`, ev => {
@@ -55,4 +53,7 @@ saveButtons.forEach(button => {
     });
 })
 
-dcrack.createRacks(document, 'rack', asyncGetRemoteDataHttp, eventListenersSelector);
+dcrack.config.event_dispatch_selector = 'button';
+dcrack.config.asyncGetData = asyncGetRemoteDataHttp;
+dcrack.config.asyncPostData = asyncPostRemoteDataHttp;
+dcrack.createRacks(document, 'rack');

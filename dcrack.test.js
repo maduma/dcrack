@@ -3,12 +3,13 @@
 'use strict';
 
 const dcrack = require('./dcrack.js');
+dcrack.config.DEFAULT_FREE_CLASS = 'free';
 
 function checkResult(html, size) {
     const container = document.createElement('div');
     container.innerHTML = html;
     const target = container.querySelector('#target');
-    const result = dcrack.getFreeElementsAdjoining(target, size, 'free');
+    const result = dcrack.getFreeElementsAdjoining(target, size);
     const selection = container.querySelectorAll('.select');
     expect(result).toStrictEqual(selection);
 }
@@ -138,15 +139,16 @@ test('no free unit for 3ru, non-adjacent', () => {
 
 test('target as no parent element', () => {
     const target = document.createElement('div');
-    const result = dcrack.getFreeElementsAdjoining(target, 2, 'free');
+    const result = dcrack.getFreeElementsAdjoining(target, 2);
     expect(result).toStrictEqual(dcrack.EMPTY_NODELIST);
 });
 
 test('create a rack', () => {
     const target = document.createElement('div');
-    target.innerHTML = '<tableau size="2" rack-class="tableau rouge" rack-unit-class=" tiroir  bleu "/>';
-    const result = dcrack.createRacks(target, 'tableau', {});
-    const expected = document.createElement('div');
-    expected.innerHTML = `<div class="tableau rouge"><div class="tiroir bleu" rack-unit-nbr="0">0</div><div class="tiroir bleu" rack-unit-nbr="1">1</div></div>`
-    expect(target).toStrictEqual(expected);
+    target.innerHTML = '<tableau rack-id="1" size-ru="2"></tableau>';
+    dcrack.createRacks(target, 'tableau').then(data => {
+        const expected = document.createElement('div');
+        expected.innerHTML = `<div class="rack-42u" id="rack-1" rack-id="1" size-ru="2"><div class="equipment free-space size-1u" rack-unit-nbr="0">0</div><div class="equipment free-space size-1u" rack-unit-nbr="1">1</div></div>`;
+        expect(target).toStrictEqual(expected);
+    });
 });

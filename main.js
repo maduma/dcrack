@@ -1,4 +1,4 @@
-const dcrack = require('./modules/dcrack.js');
+const dcrack = require('./dcrack.js');
 
 async function asyncLocalDataHttp(rackId) {
     const response = await fetch('data.json');
@@ -35,7 +35,7 @@ const loadButtons = document.querySelectorAll('button.load');
 loadButtons.forEach(button => {
     const rackId = button.getAttribute('rack-id');
     button.addEventListener('click', ev => {
-        dcrack.loadRack(document, rackId, asyncLocalDataHttp, eventListenersSelector);
+        dcrack.loadRack(document, rackId, asyncGetRemoteDataHttp, eventListenersSelector);
         button.parentNode.querySelectorAll('button').forEach(b => b.disabled = true);
     });
     button.addEventListener(`rack-${rackId}-changed`, ev => {
@@ -47,7 +47,7 @@ const saveButtons = document.querySelectorAll('button.save');
 saveButtons.forEach(button => {
     const rackId = button.getAttribute('rack-id');
     button.addEventListener('click', ev => {
-        dcrack.saveRack(document, rackId, noPostData, eventListenersSelector);
+        dcrack.saveRack(document, rackId, asyncPostRemoteDataHttp, eventListenersSelector);
         button.parentNode.querySelectorAll('button').forEach(b => b.disabled = true);
     });
     button.addEventListener(`rack-${rackId}-changed`, ev => {
@@ -55,4 +55,4 @@ saveButtons.forEach(button => {
     });
 })
 
-dcrack.createRacks(document, 'rack', asyncLocalDataHttp, eventListenersSelector);
+dcrack.createRacks(document, 'rack', asyncGetRemoteDataHttp, eventListenersSelector);

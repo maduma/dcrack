@@ -9,6 +9,7 @@ const config = {
     event_dispatch_selector: null,
     asyncGetData: async rackId => [],
     asyncPostData: async (rackId, data) => [],
+    genTitle: data => `${data.size_ru}U, ${data.power_watt} Watts, ${data.cooling_btuh} BTU/h`,
 }
 
 const SELECTED_CLASSNAME = 'private-use-class--this-element-is-selected';
@@ -104,7 +105,7 @@ function newEquip(data, position) {
     if (data.image) {
         equipment.setAttribute('style', `background-image: url("${data.image}");`);
     }
-    equipment.innerHTML = `<span title="${data.size_ru}U">${data.name}</span>`;
+    equipment.innerHTML = `<span title="${config.genTitle(data)}">${data.name}</span>`;
     equipment.id = `equipment-${createUuid()}`;
     equipment.addEventListener("dragstart", event => {
         event.dataTransfer.setData("id", equipment.id);

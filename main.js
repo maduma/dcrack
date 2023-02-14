@@ -1,17 +1,9 @@
 const dcrack = require('./dcrack.js');
 
 async function asyncLocalDataHttp(rackId) {
-    const response = await fetch('data.json');
+    const response = await fetch(`data_${rackId}.json`);
     const data = await response.json();
-    return data[rackId];
-}
-
-async function noData(rackId) {
-    return []
-}
-
-async function noPostData(rackId, data) {
-    return []
+    return data;
 }
 
 async function asyncGetRemoteDataHttp(rackId) {
@@ -54,6 +46,6 @@ saveButtons.forEach(button => {
 })
 
 dcrack.config.event_dispatch_selector = 'button';
-dcrack.config.asyncGetData = asyncGetRemoteDataHttp;
+dcrack.config.asyncGetData = asyncLocalDataHttp;
 dcrack.config.asyncPostData = asyncPostRemoteDataHttp;
 dcrack.createRacks(document, 'rack');

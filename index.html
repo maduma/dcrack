@@ -9,29 +9,104 @@
     <script src="https://unpkg.com/browser-cjs/require.min.js"></script>
     <title>Document</title>
 </head>
-<body>
-    <div class="three-columns">
-        <div>
-            <div class="rack-title">Server</div>
-            <rack rack-id="1"></rack>
-            <div class="buttons">
-                <button disabled class="load" rack-id="1">Load</button>
-                <button disabled class="save" rack-id="1">Save</button>
-            </div>
+<body class="menu-left">
+    <nav> 
+        
+        <div class="datacenter-info">
+            <h2>Room HR +3</h2>
+            <ul>
+                <li>Total Watts: 344543</li>
+                <li>Total Btus: 776722</li>
+                <li>Total Rack Units: 34</li>
+                <li>Free Rack Units: 12</li>
+                <li>MAx adajacent rack units: 12</li>
+            </ul>
         </div>
         <div>
-            <div class="rack-title">Network</div>
-            <rack rack-id="4"></rack>
-            <div class="buttons">
-                <button disabled class="load" rack-id="4">Load</button>
-                <button disabled class="save" rack-id="4">Save</button>
+            <li>Home</li>
+            <li>Login</li>
+        </div>
+    </nav>
+    <div class="many-columns">
+        <div class="the-column">
+            <div class="rack-container">
+                <div class="rack-bar">
+                    <div class="rack-title">Servers</div>
+                    <div class="rack-info">
+                        <div class="rack-power">3500 Watts</div>
+                        <div class="rack-btush">18034 BTUS/Hour</div>
+                        <div class="rack-connections">23 connections</div>
+                        <ul>
+                            <li>23 10Gb SWICH-A</li>
+                            <li>23 10Gb SWICH-B</li>
+                            <li>12 16Gb SAN-A</li>
+                            <li>12 16Gb SAN-B</li>
+                        </ul>
+                    </div>
+                    <div class="rack-actions">
+                        <div class="buttons">
+                            <button disabled class="load" rack-id="1">Load</button>
+                            <button disabled class="save" rack-id="1">Save</button>
+                        </div>
+                    </div>
+                </div>
+                <rack rack-id="1"></rack>
             </div>
         </div>
-        <div>
-            <div class="rack-title">Equipements</div>
-            <rack rack-id="free-to-be-moved"></rack>
-            <div class="buttons">
-                <button disabled class="load" rack-id="free-to-be-moved">Load</button>
+        <div class="the-column">
+            <div class="rack-container">
+                <div class="rack-bar">
+                    <div class="rack-title">Storages</div>
+                    <div class="rack-info">
+                        <div class="rack-power">3500 Watts</div>
+                        <div class="rack-btush">18034 BTUS/Hour</div>
+                        <div class="rack-connections">23 connections</div>
+                    </div>
+                    <div class="rack-actions">
+                        <div class="buttons">
+                            <button disabled class="load" rack-id="4">Load</button>
+                            <button disabled class="save" rack-id="4">Save</button>
+                        </div>
+                    </div>
+                </div>
+                <rack rack-id="4"></rack>
+            </div>
+        </div>
+        <div class="the-column">
+            <div class="rack-container">
+                <div class="rack-bar">
+                    <div class="rack-title">Network</div>
+                    <div class="rack-info">
+                        <div class="rack-power">3500 Watts</div>
+                        <div class="rack-btush">18034 BTUS/Hour</div>
+                        <div class="rack-connections">23 connections</div>
+                    </div>
+                    <div class="rack-actions">
+                        <div class="buttons">
+                            <button disabled class="load" rack-id="5">Load</button>
+                            <button disabled class="save" rack-id="5">Save</button>
+                        </div>
+                    </div>
+                </div>
+                <rack rack-id="5"></rack>
+            </div>
+        </div>
+        <div class="the-column">
+            <div class="rack-container">
+                <div class="rack-bar">
+                    <div class="rack-title">Equipements</div>
+                    <div class="rack-info">
+                        <div class="rack-power">3500 Watts</div>
+                        <div class="rack-btush">18034 BTUS/Hour</div>
+                        <div class="rack-connections">23 connections</div>
+                    </div>
+                    <div class="rack-actions">
+                        <div class="buttons">
+                            <button disabled class="load" rack-id="free-to-be-moved">Load</button>
+                        </div>
+                    </div>
+                </div>
+                <rack rack-id="free-to-be-moved"></rack>
             </div>
         </div>
     </div>

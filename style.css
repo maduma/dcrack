@@ -83,7 +83,7 @@ nav {
     width: 244px;
     height: 883px; /* (17 + 3)*42 + 1 */
     border: 5px solid rgb(216, 207, 224);
-    box-shadow: 2px 2px 10px gray;
+    /* box-shadow: 2px 2px 10px gray; */
     border-radius: 5px;
     text-align: center;
     vertical-align: middle;
@@ -105,7 +105,7 @@ nav {
     /* border: 1px solid gray; */
     margin: 1px;
     padding: 2px;
-    text-align: right;
+    /* text-align: right; */
     font-size: larger;
     text-decoration: underline;
 }
@@ -132,7 +132,7 @@ nav {
     /* border: 1px solid lightgray; */
     padding: 2px;
     border-radius: 5px;
-    box-shadow: 5px 5px 20px grey;
+    box-shadow: 5px 5px 10px grey;
     background-color: rgb(234, 245, 248);
 }
 
